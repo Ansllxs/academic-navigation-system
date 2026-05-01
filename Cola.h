@@ -70,7 +70,7 @@ T Cola<T>::pop()
 {
     if (frente == nullptr)
     {
-        cout << " cola vacia ";
+        cout << " cola vaciaaaaaa ";
         return T();
     }
     Nodo *aux = frente;
