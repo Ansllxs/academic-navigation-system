@@ -2,6 +2,7 @@
 #define LISTA_ESTUDIANTES_H
 
 #include <list>
+#include <vector>
 #include <string>
 #include "Estudiante.h"
 #include "ABB.h"
@@ -23,8 +24,8 @@ public:
     bool eliminar(const string &carne);
 
     bool buscarPorCarne(const string &carne, Estudiante &salida) const;
-    bool buscarPorNombre(const string &nombre, Estudiante &salida) const;
-    bool buscarPorCorreo(const string &correo, Estudiante &salida) const;
+    int  buscarPorNombre(const string &nombre, vector<Estudiante> &salidas) const;
+    int  buscarPorCorreo(const string &correo, vector<Estudiante> &salidas) const;
 
     void mostrarTodos() const;
     int  cantidad() const;

@@ -53,6 +53,8 @@ public:
     int  altura() const;
     int  contar() const;
     bool Vacia() const;
+
+    void limpiar();
 };
 
 template <class K, class V>
@@ -275,6 +277,14 @@ template <class K, class V>
 bool ABB<K,V>::Vacia() const
 {
     return raiz == nullptr;
+}
+
+template <class K, class V>
+void ABB<K,V>::limpiar()
+{
+    destruir(raiz);
+    raiz = nullptr;
+    nNodos = 0;
 }
 
 #endif
