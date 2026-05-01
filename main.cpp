@@ -168,7 +168,158 @@ void menuEstudiantes(Sistema &sis)
     } while (op != 0);
 }
 
-void menuCursos(Sistema &)        { cout << "(pendiente)" << endl; }
+void menuCursos(Sistema &sis)
+{
+    int op;
+    do
+    {
+        cout << "\n--- Manejo de cursos y contenidos ---" << endl;
+        cout << "1.  Crear curso (raiz)" << endl;
+        cout << "2.  Agregar nodo hijo" << endl;
+        cout << "3.  Eliminar nodo hoja" << endl;
+        cout << "4.  Mostrar arbol completo" << endl;
+        cout << "5.  Buscar nodo por nombre" << endl;
+        cout << "6.  Mostrar nivel de un nodo" << endl;
+        cout << "7.  Contar descendientes de un nodo" << endl;
+        cout << "8.  Altura del arbol" << endl;
+        cout << "9.  Mostrar nodos hoja (recursos)" << endl;
+        cout << "10. Mostrar ruta desde la raiz a un nodo" << endl;
+        cout << "0.  Volver" << endl;
+
+        op = leerOpcion();
+
+        switch (op)
+        {
+        case 1:
+        {
+            string nombre = leerLinea("Nombre del curso: ");
+            if (nombre.empty()) { cout << "Nombre invalido." << endl; break; }
+
+            if (sis.curso != nullptr)
+            {
+                string conf = leerLinea("Ya existe un curso. Reemplazarlo? (s/n): ");
+                if (conf != "s" && conf != "S") break;
+                delete sis.curso;
+                sis.curso = nullptr;
+            }
+            sis.curso = new NodoGenerico<string>(nombre);
+            cout << "Curso '" << nombre << "' creado." << endl;
+            break;
+        }
+
+        case 2:
+        {
+            if (sis.curso == nullptr) { cout << "No hay un curso. Cre" << "alo con la opcion 1." << endl; break; }
+
+            string padre = leerLinea("Nombre del nodo padre: ");
+            NodoGenerico<string> *n = sis.curso->buscar(padre);
+            if (n == nullptr) { cout << "Nodo padre no encontrado." << endl; break; }
+
+            string hijo = leerLinea("Nombre del nuevo hijo: ");
+            if (hijo.empty()) { cout << "Nombre invalido." << endl; break; }
+
+            n->agregarHijo(hijo);
+            cout << "'" << hijo << "' agregado bajo '" << padre << "'." << endl;
+            break;
+        }
+
+        case 3:
+        {
+            if (sis.curso == nullptr) { cout << "No hay un curso." << endl; break; }
+
+            string nodo = leerLinea("Nombre de la hoja a eliminar: ");
+            if (nodo == sis.curso->getValor())
+            {
+                cout << "No se puede eliminar la raiz desde aqui. Use la opcion 1 para reemplazarla." << endl;
+                break;
+            }
+            if (sis.curso->eliminarHoja(nodo))
+                cout << "Hoja eliminada." << endl;
+            else
+                cout << "No se encontro (puede que no exista o tenga hijos)." << endl;
+            break;
+        }
+
+        case 4:
+            if (sis.curso == nullptr) { cout << "No hay un curso." << endl; break; }
+            cout << "\n--- Estructura del curso ---" << endl;
+            sis.curso->mostrar();
+            break;
+
+        case 5:
+        {
+            if (sis.curso == nullptr) { cout << "No hay un curso." << endl; break; }
+            string nodo = leerLinea("Nombre del nodo a buscar: ");
+            NodoGenerico<string> *n = sis.curso->buscar(nodo);
+            if (n != nullptr)
+                cout << "Encontrado: '" << n->getValor() << "' con "
+                     << n->getHijos().size() << " hijo(s) directo(s)." << endl;
+            else
+                cout << "Nodo no encontrado." << endl;
+            break;
+        }
+
+        case 6:
+        {
+            if (sis.curso == nullptr) { cout << "No hay un curso." << endl; break; }
+            string nodo = leerLinea("Nombre del nodo: ");
+            int nivel = sis.curso->nivel(nodo);
+            if (nivel < 0) cout << "Nodo no encontrado." << endl;
+            else            cout << "Nivel de '" << nodo << "': " << nivel
+                                 << " (la raiz es nivel 0)." << endl;
+            break;
+        }
+
+        case 7:
+        {
+            if (sis.curso == nullptr) { cout << "No hay un curso." << endl; break; }
+            string nodo = leerLinea("Nombre del nodo: ");
+            NodoGenerico<string> *n = sis.curso->buscar(nodo);
+            if (n == nullptr) cout << "Nodo no encontrado." << endl;
+            else              cout << "'" << nodo << "' tiene "
+                                   << n->contarDescendientes() << " descendientes." << endl;
+            break;
+        }
+
+        case 8:
+            if (sis.curso == nullptr) { cout << "No hay un curso." << endl; break; }
+            cout << "Altura del arbol: " << sis.curso->altura() << endl;
+            break;
+
+        case 9:
+            if (sis.curso == nullptr) { cout << "No hay un curso." << endl; break; }
+            cout << "\n--- Recursos hoja ---" << endl;
+            sis.curso->mostrarHojas();
+            break;
+
+        case 10:
+        {
+            if (sis.curso == nullptr) { cout << "No hay un curso." << endl; break; }
+            string nodo = leerLinea("Nombre del nodo destino: ");
+            vector<string> ruta;
+            if (!sis.curso->rutaHasta(nodo, ruta))
+            {
+                cout << "Nodo no encontrado." << endl;
+                break;
+            }
+            cout << "Ruta: ";
+            for (size_t i = 0; i < ruta.size(); i++)
+            {
+                cout << ruta[i];
+                if (i + 1 < ruta.size()) cout << " -> ";
+            }
+            cout << endl;
+            break;
+        }
+
+        case 0:
+            break;
+
+        default:
+            cout << "Opcion invalida." << endl;
+        }
+    } while (op != 0);
+}
 void menuNavegacion(Sistema &)    { cout << "(pendiente)" << endl; }
 void menuSolicitudes(Sistema &)   { cout << "(pendiente)" << endl; }
 void menuIndice(Sistema &)        { cout << "(pendiente)" << endl; }
