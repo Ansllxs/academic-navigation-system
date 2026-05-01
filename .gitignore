@@ -1,0 +1,16 @@
+# Ejecutables compilados
+*.exe
+*.out
+*.o
+*.obj
+
+# Carpeta build si llegamos a usarla
+build/
+
+# Archivos del IDE
+.vscode/
+.idea/
+
+# Sistema operativo
+Thumbs.db
+.DS_Store
