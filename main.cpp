@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <limits>
+#include <cctype>
 
 #include "Estudiante.h"
 #include "ListaEstudiantes.h"
@@ -48,7 +49,13 @@ string leerLinea(const string &prompt)
     cout << prompt;
     string s;
     getline(cin, s);
-    return s;
+
+    // limpia espacios y tabs al inicio y al final para evitar errores
+    // tipo "Conjuntos " vs "Conjuntos"
+    size_t a = 0, b = s.size();
+    while (a < b && isspace((unsigned char)s[a])) a++;
+    while (b > a && isspace((unsigned char)s[b - 1])) b--;
+    return s.substr(a, b - a);
 }
 
 void menuEstudiantes(Sistema &sis)
@@ -211,11 +218,14 @@ void menuCursos(Sistema &sis)
         {
             if (sis.curso == nullptr) { cout << "No hay un curso. Cre" << "alo con la opcion 1." << endl; break; }
 
-            string padre = leerLinea("Nombre del nodo padre: ");
-            NodoGenerico<string> *n = sis.curso->buscar(padre);
-            if (n == nullptr) { cout << "Nodo padre no encontrado." << endl; break; }
+            cout << "\n--- Estructura actual ---" << endl;
+            sis.curso->mostrar();
 
-            string hijo = leerLinea("Nombre del nuevo hijo: ");
+            string padre = leerLinea("\nNombre del nodo PADRE (un nodo que YA existe arriba): ");
+            NodoGenerico<string> *n = sis.curso->buscar(padre);
+            if (n == nullptr) { cout << "Nodo padre no encontrado en el arbol." << endl; break; }
+
+            string hijo = leerLinea("Nombre del nuevo HIJO que se va a crear bajo '" + padre + "': ");
             if (hijo.empty()) { cout << "Nombre invalido." << endl; break; }
 
             n->agregarHijo(hijo);
@@ -227,7 +237,10 @@ void menuCursos(Sistema &sis)
         {
             if (sis.curso == nullptr) { cout << "No hay un curso." << endl; break; }
 
-            string nodo = leerLinea("Nombre de la hoja a eliminar: ");
+            cout << "\n--- Estructura actual ---" << endl;
+            sis.curso->mostrar();
+
+            string nodo = leerLinea("\nNombre de la hoja a eliminar: ");
             if (nodo == sis.curso->getValor())
             {
                 cout << "No se puede eliminar la raiz desde aqui. Use la opcion 1 para reemplazarla." << endl;
@@ -249,7 +262,9 @@ void menuCursos(Sistema &sis)
         case 5:
         {
             if (sis.curso == nullptr) { cout << "No hay un curso." << endl; break; }
-            string nodo = leerLinea("Nombre del nodo a buscar: ");
+            cout << "\n--- Estructura actual ---" << endl;
+            sis.curso->mostrar();
+            string nodo = leerLinea("\nNombre del nodo a buscar: ");
             NodoGenerico<string> *n = sis.curso->buscar(nodo);
             if (n != nullptr)
                 cout << "Encontrado: '" << n->getValor() << "' con "
@@ -262,7 +277,9 @@ void menuCursos(Sistema &sis)
         case 6:
         {
             if (sis.curso == nullptr) { cout << "No hay un curso." << endl; break; }
-            string nodo = leerLinea("Nombre del nodo: ");
+            cout << "\n--- Estructura actual ---" << endl;
+            sis.curso->mostrar();
+            string nodo = leerLinea("\nNombre del nodo: ");
             int nivel = sis.curso->nivel(nodo);
             if (nivel < 0) cout << "Nodo no encontrado." << endl;
             else            cout << "Nivel de '" << nodo << "': " << nivel
@@ -273,7 +290,9 @@ void menuCursos(Sistema &sis)
         case 7:
         {
             if (sis.curso == nullptr) { cout << "No hay un curso." << endl; break; }
-            string nodo = leerLinea("Nombre del nodo: ");
+            cout << "\n--- Estructura actual ---" << endl;
+            sis.curso->mostrar();
+            string nodo = leerLinea("\nNombre del nodo: ");
             NodoGenerico<string> *n = sis.curso->buscar(nodo);
             if (n == nullptr) cout << "Nodo no encontrado." << endl;
             else              cout << "'" << nodo << "' tiene "
@@ -295,7 +314,9 @@ void menuCursos(Sistema &sis)
         case 10:
         {
             if (sis.curso == nullptr) { cout << "No hay un curso." << endl; break; }
-            string nodo = leerLinea("Nombre del nodo destino: ");
+            cout << "\n--- Estructura actual ---" << endl;
+            sis.curso->mostrar();
+            string nodo = leerLinea("\nNombre del nodo destino: ");
             vector<string> ruta;
             if (!sis.curso->rutaHasta(nodo, ruta))
             {
