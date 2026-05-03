@@ -560,7 +560,100 @@ void menuSolicitudes(Sistema &sis)
         }
     } while (op != 0);
 }
-void menuIndice(Sistema &)        { cout << "(pendiente)" << endl; }
+void menuIndice(Sistema &sis)
+{
+    int op;
+    do
+    {
+        cout << "\n--- Indice de busqueda (ABB de estudiantes por carne) ---" << endl;
+        cout << "1. Buscar por carne" << endl;
+        cout << "2. Recorrido inorden" << endl;
+        cout << "3. Recorrido preorden" << endl;
+        cout << "4. Recorrido postorden" << endl;
+        cout << "5. Mostrar menor carne" << endl;
+        cout << "6. Mostrar mayor carne" << endl;
+        cout << "7. Altura del ABB" << endl;
+        cout << "8. Contar nodos" << endl;
+        cout << "0. Volver" << endl;
+
+        op = leerOpcion();
+
+        switch (op)
+        {
+        case 1:
+        {
+            string carne = leerLinea("Carne a buscar: ");
+            Estudiante e;
+            if (sis.estudiantes.getIndice().buscar(carne, e))
+            {
+                cout << "Encontrado: ";
+                e.mostrar();
+            }
+            else
+                cout << "No se encontro en el ABB." << endl;
+            break;
+        }
+
+        case 2:
+            cout << "Inorden:   ";
+            sis.estudiantes.getIndice().inorden();
+            cout << endl;
+            break;
+
+        case 3:
+            cout << "Preorden:  ";
+            sis.estudiantes.getIndice().preorden();
+            cout << endl;
+            break;
+
+        case 4:
+            cout << "Postorden: ";
+            sis.estudiantes.getIndice().postorden();
+            cout << endl;
+            break;
+
+        case 5:
+        {
+            string carne;
+            Estudiante e;
+            if (sis.estudiantes.getIndice().minimo(carne, e))
+            {
+                cout << "Menor carne: ";
+                e.mostrar();
+            }
+            else cout << "El ABB esta vacio." << endl;
+            break;
+        }
+
+        case 6:
+        {
+            string carne;
+            Estudiante e;
+            if (sis.estudiantes.getIndice().maximo(carne, e))
+            {
+                cout << "Mayor carne: ";
+                e.mostrar();
+            }
+            else cout << "El ABB esta vacio." << endl;
+            break;
+        }
+
+        case 7:
+            cout << "Altura del ABB: " << sis.estudiantes.getIndice().altura() << endl;
+            break;
+
+        case 8:
+            cout << "Nodos en el ABB: " << sis.estudiantes.getIndice().contar() << endl;
+            break;
+
+        case 0:
+            break;
+
+        default:
+            cout << "Opcion invalida." << endl;
+        }
+    } while (op != 0);
+}
 void menuReportes(Sistema &)      { cout << "(pendiente)" << endl; }
 void guardarDatos(Sistema &sis)
 {
@@ -612,7 +705,7 @@ int main()
         cout << "6. Reportes" << endl;
         cout << "7. Guardar datos" << endl;
         cout << "8. Cargar datos" << endl;
-        cout << "9. Salir" << endl;
+        cout << "0. Salir" << endl;
 
         op = leerOpcion();
 
@@ -626,7 +719,7 @@ int main()
         case 6: menuReportes(sis);     break;
         case 7: guardarDatos(sis);     break;
         case 8: cargarDatos(sis);      break;
-        case 9: cout << "Hasta luego." << endl; break;
+        case 0: cout << "Hasta luego." << endl; break;
         default: cout << "Opcion invalida." << endl;
         }
 
