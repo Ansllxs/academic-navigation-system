@@ -2,6 +2,7 @@
 #define REPORTES_H
 
 #include <string>
+#include <map>
 #include "ListaEstudiantes.h"
 #include "ArbolGenerico.h"
 #include "HistorialNavegacion.h"
@@ -21,6 +22,14 @@ namespace Reportes
     void cantidadEstudiantes(const ListaEstudiantes &lista);
     void menorYMayorCarne(const ListaEstudiantes &lista);
     void recursosHoja(const NodoGenerico<string> *raiz);
+
+    // Exporta los 10 reportes a un archivo de texto.
+    // Devuelve true si pudo escribir el archivo.
+    bool exportarTodos(const string &ruta,
+                       const ListaEstudiantes &lista,
+                       const NodoGenerico<string> *curso,
+                       const ColaSolicitudes &cola,
+                       const map<string, HistorialNavegacion> &historiales);
 }
 
 #endif

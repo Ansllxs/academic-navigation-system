@@ -654,7 +654,77 @@ void menuIndice(Sistema &sis)
         }
     } while (op != 0);
 }
-void menuReportes(Sistema &)      { cout << "(pendiente)" << endl; }
+void menuReportes(Sistema &sis)
+{
+    int op;
+    do
+    {
+        cout << "\n--- Reportes ---" << endl;
+        cout << "1.  Lista completa de estudiantes" << endl;
+        cout << "2.  Recorrido del ABB en inorden" << endl;
+        cout << "3.  Estructura jerarquica completa del curso" << endl;
+        cout << "4.  Historial de navegacion de un estudiante" << endl;
+        cout << "5.  Solicitudes pendientes en cola" << endl;
+        cout << "6.  Cantidad de nodos del arbol generico" << endl;
+        cout << "7.  Altura del arbol generico" << endl;
+        cout << "8.  Cantidad de estudiantes registrados" << endl;
+        cout << "9.  Estudiante con menor y mayor carne" << endl;
+        cout << "10. Recursos hoja del arbol del curso" << endl;
+        cout << "11. Exportar TODOS los reportes a archivo" << endl;
+        cout << "0.  Volver" << endl;
+
+        op = leerOpcion();
+
+        switch (op)
+        {
+        case 1: Reportes::listaCompletaEstudiantes(sis.estudiantes); break;
+        case 2: Reportes::abbInorden(sis.estudiantes); break;
+        case 3: Reportes::estructuraCurso(sis.curso); break;
+
+        case 4:
+        {
+            string carne = leerLinea("Carne del estudiante: ");
+            Estudiante e;
+            if (!sis.estudiantes.buscarPorCarne(carne, e))
+            {
+                cout << "Estudiante no encontrado." << endl;
+                break;
+            }
+            map<string, HistorialNavegacion>::iterator it = sis.historiales.find(e.getCarne());
+            if (it == sis.historiales.end() || !it->second.hayHistorial())
+            {
+                cout << "El estudiante " << e.getNombre() << " no tiene historial registrado." << endl;
+                break;
+            }
+            cout << "Estudiante: " << e.getNombre() << endl;
+            Reportes::historialEstudiante(it->second, e.getCarne());
+            break;
+        }
+
+        case 5:  Reportes::solicitudesPendientes(sis.solicitudes); break;
+        case 6:  Reportes::cantidadNodosArbol(sis.curso); break;
+        case 7:  Reportes::alturaArbol(sis.curso); break;
+        case 8:  Reportes::cantidadEstudiantes(sis.estudiantes); break;
+        case 9:  Reportes::menorYMayorCarne(sis.estudiantes); break;
+        case 10: Reportes::recursosHoja(sis.curso); break;
+
+        case 11:
+        {
+            string ruta = leerLinea("Ruta del archivo (Enter para 'data/reportes.txt'): ");
+            if (ruta.empty()) ruta = "data/reportes.txt";
+            if (Reportes::exportarTodos(ruta, sis.estudiantes, sis.curso, sis.solicitudes, sis.historiales))
+                cout << "Reportes exportados a: " << ruta << endl;
+            else
+                cout << "No se pudo abrir el archivo: " << ruta << endl;
+            break;
+        }
+
+        case 0: break;
+
+        default: cout << "Opcion invalida." << endl;
+        }
+    } while (op != 0);
+}
 void guardarDatos(Sistema &sis)
 {
     bool ok1 = Persistencia::guardarEstudiantes(sis.estudiantes, "data/estudiantes.txt");

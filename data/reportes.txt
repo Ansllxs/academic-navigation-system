@@ -1,0 +1,44 @@
+============================================
+  REPORTES DEL SISTEMA ACADEMICO
+  Generado: 2026-05-03 17:16:55
+============================================
+
+--- Reporte 1: Lista completa de estudiantes ---
+=== Lista de estudiantes ===
+Carne: 2024001 | Nombre: Angie Alpizar | Correo: angie@tec.cr
+Carne: 2024002 | Nombre: Maria Lopez | Correo: maria@tec.cr
+
+--- Reporte 2: Recorrido del ABB en inorden ---
+=== ABB en inorden (carnes) ===
+2024001 2024002 
+
+--- Reporte 3: Estructura jerarquica del curso ---
+=== Estructura del curso ===
+Estructuras de Datos
+|-- Unidad 1
+    |-- Tema 1.1
+        |-- PDF de teoria
+
+--- Reporte 4: Historial de navegacion por estudiante ---
+(no hay historiales registrados)
+--- Reporte 5: Solicitudes pendientes en cola ---
+=== Solicitudes pendientes ===
+(no hay solicitudes pendientes)
+
+--- Reporte 6: Cantidad de nodos del arbol generico ---
+Nodos del arbol: 4
+
+--- Reporte 7: Altura del arbol generico ---
+Altura del arbol: 4
+
+--- Reporte 8: Cantidad de estudiantes registrados ---
+Cantidad de estudiantes: 2
+
+--- Reporte 9: Estudiante con menor y mayor carne ---
+Menor carne: 2024001
+Mayor carne: 2024002
+
+--- Reporte 10: Recursos hoja del arbol del curso ---
+=== Recursos hoja del curso ===
+- PDF de teoria
+
