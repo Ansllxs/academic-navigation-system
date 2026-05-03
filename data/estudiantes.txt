@@ -1,2 +1,4 @@
 2024001|Angie Alpizar|angie@tec.cr
 2024002|Maria Lopez|maria@tec.cr
+2024003|Magaly Porras|maga@tec.cr
+2025001|Erick Alpizar|erick@tec.cr

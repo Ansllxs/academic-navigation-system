@@ -1,6 +1,6 @@
 ============================================
   REPORTES DEL SISTEMA ACADEMICO
-  Generado: 2026-05-03 17:16:55
+  Generado: 2026-05-03 17:19:30
 ============================================
 
 --- Reporte 1: Lista completa de estudiantes ---

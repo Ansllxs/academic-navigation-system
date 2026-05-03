@@ -793,7 +793,7 @@ int main()
         default: cout << "Opcion invalida." << endl;
         }
 
-    } while (op != 9);
+    } while (op != 0);
 
     return 0;
 }
