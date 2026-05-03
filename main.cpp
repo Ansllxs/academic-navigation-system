@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <map>
 #include <limits>
 #include <cctype>
 
@@ -20,10 +21,10 @@ using namespace std;
 // estado global del sistema (se pasa por referencia a los submenus)
 struct Sistema
 {
-    ListaEstudiantes      estudiantes;
-    NodoGenerico<string> *curso;
-    HistorialNavegacion   historial;
-    ColaSolicitudes       solicitudes;
+    ListaEstudiantes                       estudiantes;
+    NodoGenerico<string>                  *curso;
+    map<string, HistorialNavegacion>       historiales;  // un historial por carne
+    ColaSolicitudes                        solicitudes;
 
     Sistema() { curso = nullptr; }
     ~Sistema() { if (curso != nullptr) delete curso; }
@@ -341,7 +342,123 @@ void menuCursos(Sistema &sis)
         }
     } while (op != 0);
 }
-void menuNavegacion(Sistema &)    { cout << "(pendiente)" << endl; }
+void menuNavegacion(Sistema &sis)
+{
+    if (sis.estudiantes.cantidad() == 0)
+    {
+        cout << "No hay estudiantes registrados. Registra uno primero en el menu de estudiantes." << endl;
+        return;
+    }
+
+    string carne = leerLinea("Ingrese el carne del estudiante que va a navegar: ");
+    Estudiante e;
+    if (!sis.estudiantes.buscarPorCarne(carne, e))
+    {
+        cout << "Estudiante no encontrado." << endl;
+        return;
+    }
+
+    cout << "Sesion iniciada para " << e.getNombre() << " (" << e.getCarne() << ")." << endl;
+
+    // Obtiene/crea el historial asociado a este estudiante
+    HistorialNavegacion &hist = sis.historiales[e.getCarne()];
+
+    int op;
+    do
+    {
+        cout << "\n--- Navegacion academica de " << e.getNombre() << " ---" << endl;
+        cout << "1. Registrar visita a un nodo del curso" << endl;
+        cout << "2. Mostrar historial de navegacion" << endl;
+        cout << "3. Retroceder al elemento anterior" << endl;
+        cout << "4. Limpiar historial" << endl;
+        cout << "5. Registrar accion academica" << endl;
+        cout << "6. Deshacer ultima accion" << endl;
+        cout << "0. Volver" << endl;
+
+        op = leerOpcion();
+
+        switch (op)
+        {
+        case 1:
+        {
+            if (sis.curso == nullptr)
+            {
+                cout << "No hay curso cargado. Crealo en el menu de cursos." << endl;
+                break;
+            }
+            cout << "\n--- Estructura del curso ---" << endl;
+            sis.curso->mostrar();
+
+            string nodo = leerLinea("\nNombre del nodo a visitar: ");
+            if (nodo.empty()) { cout << "Nombre invalido." << endl; break; }
+            if (sis.curso->buscar(nodo) == nullptr)
+            {
+                cout << "Ese nodo no existe en el curso." << endl;
+                break;
+            }
+            hist.registrarVisita(nodo);
+            cout << "Visita registrada: " << nodo << endl;
+            break;
+        }
+
+        case 2:
+            cout << "\n--- Historial de navegacion (mas reciente arriba) ---" << endl;
+            hist.mostrarHistorial();
+            break;
+
+        case 3:
+            if (!hist.hayHistorial())
+            {
+                cout << "No hay historial para retroceder." << endl;
+                break;
+            }
+            cout << "Retrocedido. Se removio: " << hist.retroceder() << endl;
+            break;
+
+        case 4:
+            hist.limpiarHistorial();
+            cout << "Historial limpiado." << endl;
+            break;
+
+        case 5:
+        {
+            cout << "Tipo de accion:" << endl;
+            cout << "  1. Inscripcion en una actividad" << endl;
+            cout << "  2. Marcacion de recurso como completado" << endl;
+            cout << "  3. Visita registrada por error" << endl;
+            cout << "  4. Otro" << endl;
+            string tipo    = leerLinea("Opcion (1-4): ");
+            string detalle = leerLinea("Detalle (recurso o descripcion): ");
+            if (detalle.empty()) { cout << "Detalle invalido." << endl; break; }
+
+            string accion;
+            if      (tipo == "1") accion = "Inscripcion: "      + detalle;
+            else if (tipo == "2") accion = "Completado: "       + detalle;
+            else if (tipo == "3") accion = "Visita por error: " + detalle;
+            else                  accion = "Otro: "             + detalle;
+
+            hist.registrarAccion(accion);
+            cout << "Accion registrada: " << accion << endl;
+            break;
+        }
+
+        case 6:
+            if (!hist.hayAcciones())
+            {
+                cout << "No hay acciones para deshacer." << endl;
+                break;
+            }
+            cout << "Deshecho: " << hist.deshacerAccion() << endl;
+            break;
+
+        case 0:
+            break;
+
+        default:
+            cout << "Opcion invalida." << endl;
+        }
+    } while (op != 0);
+}
 void menuSolicitudes(Sistema &)   { cout << "(pendiente)" << endl; }
 void menuIndice(Sistema &)        { cout << "(pendiente)" << endl; }
 void menuReportes(Sistema &)      { cout << "(pendiente)" << endl; }
