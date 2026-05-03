@@ -465,7 +465,101 @@ void menuNavegacion(Sistema &sis)
         }
     } while (op != 0);
 }
-void menuSolicitudes(Sistema &)   { cout << "(pendiente)" << endl; }
+void menuSolicitudes(Sistema &sis)
+{
+    int op;
+    do
+    {
+        cout << "\n--- Solicitudes pendientes ---" << endl;
+        cout << "1. Insertar nueva solicitud" << endl;
+        cout << "2. Atender la siguiente solicitud" << endl;
+        cout << "3. Mostrar la solicitud al frente" << endl;
+        cout << "4. Mostrar todas las solicitudes" << endl;
+        cout << "5. Contar pendientes" << endl;
+        cout << "0. Volver" << endl;
+
+        op = leerOpcion();
+
+        switch (op)
+        {
+        case 1:
+        {
+            string carne = leerLinea("Carne del estudiante: ");
+            Estudiante e;
+            if (!sis.estudiantes.buscarPorCarne(carne, e))
+            {
+                cout << "Estudiante no encontrado en la lista." << endl;
+                break;
+            }
+
+            cout << "Tipo de solicitud:" << endl;
+            cout << "  1. Reporte de error en material   (URGENTE)" << endl;
+            cout << "  2. Habilitacion de recurso        (URGENTE)" << endl;
+            cout << "  3. Revision de tarea              (normal)" << endl;
+            cout << "  4. Consulta academica             (normal)" << endl;
+
+            string tipoStr = leerLinea("Opcion (1-4): ");
+            int tipo;
+            try { tipo = stoi(tipoStr); }
+            catch (...) { cout << "Tipo invalido." << endl; break; }
+            if (tipo < 1 || tipo > 4) { cout << "Tipo invalido." << endl; break; }
+
+            string desc = leerLinea("Descripcion: ");
+            if (desc.empty()) { cout << "Descripcion invalida." << endl; break; }
+
+            sis.solicitudes.insertar(Solicitud(e.getCarne(), desc, tipo));
+            cout << "Solicitud insertada para " << e.getNombre() << "." << endl;
+            break;
+        }
+
+        case 2:
+        {
+            Solicitud s;
+            if (!sis.solicitudes.atender(s))
+            {
+                cout << "No hay solicitudes pendientes." << endl;
+                break;
+            }
+            cout << "Atendiendo: ";
+            s.mostrar();
+
+            // Bonus: mostrar el nombre del estudiante (integracion con ABB)
+            Estudiante e;
+            if (sis.estudiantes.buscarPorCarne(s.getCarne(), e))
+                cout << "  (Estudiante: " << e.getNombre() << ")" << endl;
+            break;
+        }
+
+        case 3:
+        {
+            Solicitud s;
+            if (!sis.solicitudes.frente(s))
+            {
+                cout << "No hay solicitudes pendientes." << endl;
+                break;
+            }
+            cout << "La proxima a atender es: ";
+            s.mostrar();
+            break;
+        }
+
+        case 4:
+            cout << endl;
+            sis.solicitudes.mostrarTodas();
+            break;
+
+        case 5:
+            cout << "Solicitudes pendientes: " << sis.solicitudes.cantidadPendientes() << endl;
+            break;
+
+        case 0:
+            break;
+
+        default:
+            cout << "Opcion invalida." << endl;
+        }
+    } while (op != 0);
+}
 void menuIndice(Sistema &)        { cout << "(pendiente)" << endl; }
 void menuReportes(Sistema &)      { cout << "(pendiente)" << endl; }
 void guardarDatos(Sistema &sis)
