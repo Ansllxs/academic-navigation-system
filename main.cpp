@@ -372,7 +372,8 @@ void menuNavegacion(Sistema &sis)
         cout << "3. Retroceder al elemento anterior" << endl;
         cout << "4. Limpiar historial" << endl;
         cout << "5. Registrar accion academica" << endl;
-        cout << "6. Deshacer ultima accion" << endl;
+        cout << "6. Mostrar historial de acciones" << endl;
+        cout << "7. Deshacer ultima accion" << endl;
         cout << "0. Volver" << endl;
 
         op = leerOpcion();
@@ -443,6 +444,11 @@ void menuNavegacion(Sistema &sis)
         }
 
         case 6:
+            cout << "\n--- Historial de acciones (mas reciente arriba) ---" << endl;
+            hist.mostrarAcciones();
+            break;
+
+        case 7:
             if (!hist.hayAcciones())
             {
                 cout << "No hay acciones para deshacer." << endl;
@@ -462,8 +468,39 @@ void menuNavegacion(Sistema &sis)
 void menuSolicitudes(Sistema &)   { cout << "(pendiente)" << endl; }
 void menuIndice(Sistema &)        { cout << "(pendiente)" << endl; }
 void menuReportes(Sistema &)      { cout << "(pendiente)" << endl; }
-void guardarDatos(Sistema &)      { cout << "(pendiente)" << endl; }
-void cargarDatos(Sistema &)       { cout << "(pendiente)" << endl; }
+void guardarDatos(Sistema &sis)
+{
+    bool ok1 = Persistencia::guardarEstudiantes(sis.estudiantes, "data/estudiantes.txt");
+    bool ok2 = Persistencia::guardarCurso(sis.curso,            "data/cursos.txt");
+    bool ok3 = Persistencia::guardarSolicitudes(sis.solicitudes,"data/solicitudes.txt");
+
+    cout << "\n--- Resultado de guardar ---" << endl;
+    cout << "  Estudiantes:  " << (ok1 ? "OK" : "ERROR") << " (" << sis.estudiantes.cantidad() << ")" << endl;
+    cout << "  Curso:        " << (ok2 ? "OK" : "ERROR") << endl;
+    cout << "  Solicitudes:  " << (ok3 ? "OK" : "ERROR") << " (" << sis.solicitudes.cantidadPendientes() << ")" << endl;
+    if (ok1 && ok2 && ok3)
+        cout << "Todos los datos fueron guardados en data/." << endl;
+}
+
+void cargarDatos(Sistema &sis)
+{
+    bool okE = Persistencia::cargarEstudiantes(sis.estudiantes, "data/estudiantes.txt");
+
+    NodoGenerico<string> *nuevoCurso = Persistencia::cargarCurso("data/cursos.txt");
+    bool okC = (nuevoCurso != nullptr);
+    if (okC)
+    {
+        if (sis.curso != nullptr) delete sis.curso;
+        sis.curso = nuevoCurso;
+    }
+
+    bool okS = Persistencia::cargarSolicitudes(sis.solicitudes, "data/solicitudes.txt");
+
+    cout << "\n--- Resultado de cargar ---" << endl;
+    cout << "  Estudiantes:  " << (okE ? "OK" : "no encontrado") << " (" << sis.estudiantes.cantidad() << " en total)" << endl;
+    cout << "  Curso:        " << (okC ? "OK" : "no encontrado") << endl;
+    cout << "  Solicitudes:  " << (okS ? "OK" : "no encontrado") << " (" << sis.solicitudes.cantidadPendientes() << " pendientes)" << endl;
+}
 
 int main()
 {
